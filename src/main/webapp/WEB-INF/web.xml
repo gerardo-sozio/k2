@@ -36,4 +36,5 @@
   	<role-name>registeredUser</role-name>
   </security-role>
   
-</web-app>
+  <error-page>
+  	<location>/error.html</location></error-page></web-app>
