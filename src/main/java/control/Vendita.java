@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -60,7 +61,7 @@ public class Vendita extends HttpServlet {
 		                }
 		                else {
 		                	if (item.getFieldName().compareTo("nome") == 0) {
-		                		product.setNome(item.getString());
+		                		product.setNome(sanitizeInput(item.getString()));
 		                	}
 		                	else if (item.getFieldName().compareTo("prezzo") == 0) {
 		                		product.setPrezzo(Double.parseDouble(item.getString()));
@@ -69,13 +70,13 @@ public class Vendita extends HttpServlet {
 		                		product.setSpedizione(Double.parseDouble(item.getString()));
 		                	}
 		                	else if (item.getFieldName().compareTo("tipologia") == 0) {
-		                		product.setTipologia(item.getString());
+		                		product.setTipologia(sanitizeInput(item.getString()));
 		                	}
 							else if (item.getFieldName().compareTo("tag") == 0) {
-								product.setTag(item.getString());
+								product.setTag(sanitizeTagInput(item.getString()));
 							}
 							else if (item.getFieldName().compareTo("descrizione") == 0) {
-		                		product.setDescrizione(item.getString());
+		                		product.setDescrizione(sanitizeInput(item.getString()));
 		                	}
 		                }
 		            }
@@ -112,5 +113,32 @@ public class Vendita extends HttpServlet {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
+	
+	private String sanitizeTagInput(String tag) {
+		Set<String> allowedValues = Set.of("Manga/Anime", "Videogiochi", "Originali", "Film/Serie TV");
+		if (tag == null || !allowedValues.contains(tag)) {
+			return tag;
+		}
+		
+		return "Originali";
+	}
+	
+	// Helper method to sanitize input
+		private String sanitizeInput(String input) {
+		    if (input == null) {
+		        return "";
+		    }
+		    
+		    // Replace special HTML characters with their entities
+		    String sanitized = input
+		        .replace("&", "")
+		        .replace("<", "")
+		        .replace(">", "")
+		        .replace("\"", "")
+		        .replace("'", "")
+		        .replace("/", "");
+		        
+		    return sanitized.trim();
+		}
 
 }
