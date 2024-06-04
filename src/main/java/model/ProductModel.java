@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.Set;
 
 public class ProductModel {
 
@@ -120,13 +121,19 @@ public class ProductModel {
 		PreparedStatement preparedStatement2 = null;
 
 		Collection<ProductBean> products = new LinkedList<ProductBean>();
+		
+		Set<String> allowedValues = Set.of("Action Figures", "Arredamento Casa", "Gadget");
+		if (where == null || !allowedValues.contains(where)) {
+			return products;
+		}
 
-		String selectSQL = "SELECT * FROM " + ProductModel.TABLE_NAME + " WHERE deleted = 'false' AND nomeTipologia = '" + where + "'";
+		String selectSQL = "SELECT * FROM " + ProductModel.TABLE_NAME + " WHERE deleted = 'false' AND nomeTipologia = ?";
 		String sql2 = "SELECT AVG(votazione) FROM Recensione WHERE codiceProdotto = ?";
 		
 		try {
 			connection = DriverManagerConnectionPool.getConnection();
 			preparedStatement = connection.prepareStatement(selectSQL);
+			preparedStatement.setString(1, where);
 
 			ResultSet rs = preparedStatement.executeQuery();
 
