@@ -37,4 +37,10 @@
   </security-role>
   
   <error-page>
-  	<location>/error.html</location></error-page></web-app>
+  	<location>/error.html</location></error-page>
+  <filter>
+  	<filter-name>ClickjackFilter</filter-name>
+  	<filter-class>utils.ClickjackFilter</filter-class></filter>
+  <filter-mapping>
+  	<filter-name>ClickjackFilter</filter-name>
+  	<url-pattern>/*</url-pattern></filter-mapping></web-app>
